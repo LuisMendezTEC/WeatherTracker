@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const Header = ({ onConsult }) => {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
-    const [showTemperature, setShowTemperature] = useState(false); // Cambiado a false
-    const [showHumidity, setShowHumidity] = useState(false);
-    const [startDateInput, setStartDateInput] = useState('');
-    const [endDateInput, setEndDateInput] = useState('');
-    
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const [showTemperature, setShowTemperature] = useState(false);
+  const [showHumidity, setShowHumidity] = useState(false);
+  const [startDateInput, setStartDateInput] = useState('');
+  const [endDateInput, setEndDateInput] = useState('');
+
   const handleConsult = () => {
     onConsult({ startDate, endDate, showTemperature, showHumidity });
   };
@@ -25,9 +25,7 @@ const Header = ({ onConsult }) => {
         style={styles.dateInput}
         placeholder="Initial date"
         value={startDateInput}
-        onChangeText={(text) => {
-          setStartDateInput(text);
-        }}
+        onChangeText={(text) => setStartDateInput(text)}
       />
       <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
         <Text style={styles.dateText}>{startDate.toLocaleDateString()}</Text>
@@ -52,9 +50,7 @@ const Header = ({ onConsult }) => {
         style={styles.dateInput}
         placeholder="End date"
         value={endDateInput}
-        onChangeText={(text) => {
-          setEndDateInput(text);
-        }}
+        onChangeText={(text) => setEndDateInput(text)}
       />
       <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
         <Text style={styles.dateText}>{endDate.toLocaleDateString()}</Text>
@@ -74,42 +70,41 @@ const Header = ({ onConsult }) => {
         />
       )}
 
-      
-<Text style={styles.headerTitle}>Options</Text>
-    <View style={styles.switchContainer}>
-      <View style={styles.switchOption}>
-        <Text style={styles.switchText}>Temperature</Text>
-        <Switch
-          value={showTemperature}
-          onValueChange={() => setShowTemperature((prev) => !prev)}
-          thumbColor={showTemperature ? '#4DB6AC' : '#B0BEC5'}
-          trackColor={{ false: '#B0BEC5', true: '#80CBC4' }}
-        />
+      <Text style={styles.headerTitle}>Options</Text>
+      <View style={styles.switchContainer}>
+        <View style={styles.switchOption}>
+          <Text style={styles.switchText}>Temperature</Text>
+          <Switch
+            value={showTemperature}
+            onValueChange={() => setShowTemperature((prev) => !prev)}
+            thumbColor={showTemperature ? '#4DB6AC' : '#B0BEC5'}
+            trackColor={{ false: '#B0BEC5', true: '#80CBC4' }}
+          />
+        </View>
+        <View style={styles.switchOption}>
+          <Text style={styles.switchText}>Humidity</Text>
+          <Switch
+            value={showHumidity}
+            onValueChange={() => setShowHumidity((prev) => !prev)}
+            thumbColor={showHumidity ? '#4DB6AC' : '#B0BEC5'}
+            trackColor={{ false: '#B0BEC5', true: '#80CBC4' }}
+          />
+        </View>
       </View>
-      <View style={styles.switchOption}>
-        <Text style={styles.switchText}>Humidity</Text>
-        <Switch
-          value={showHumidity}
-          onValueChange={() => setShowHumidity((prev) => !prev)}
-          thumbColor={showHumidity ? '#4DB6AC' : '#B0BEC5'}
-          trackColor={{ false: '#B0BEC5', true: '#80CBC4' }}
-        />
-      </View>
-    </View>
 
-    <TouchableOpacity style={styles.consultButton} onPress={handleConsult}>
-      <Text style={styles.buttonText}>Consult</Text>
-    </TouchableOpacity>
-  </View>
-);
+      <TouchableOpacity style={styles.consultButton} onPress={handleConsult}>
+        <Text style={styles.buttonText}>Consult</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   headerContainer: {
     padding: 15,
-    backgroundColor: '#E0F7FA',
+    backgroundColor: '#E0F7FA', // Fondo azul claro
     width: '100%',
-    height: 300,
+    flex: 1, // Para ocupar todo el espacio disponible
     position: 'absolute',
     top: 0,
     zIndex: 1000,
@@ -131,8 +126,8 @@ const styles = StyleSheet.create({
     borderColor: '#B0BEC5',
     borderRadius: 5,
     padding: 10,
-    width: '12%',
-    alignSelf: 'left',
+    width: '30%',
+    alignSelf: 'flex-start',
     marginBottom: 5,
   },
   dateText: {
@@ -147,10 +142,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   switchOption: {
-    alignItems: 'flex-start',
-    marginVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 5,
   },
   switchText: {
     fontSize: 14,
