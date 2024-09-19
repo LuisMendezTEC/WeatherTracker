@@ -97,9 +97,6 @@ const Header = ({ onConsult }) => {
       </View>
     </View>
 
-    {/* Ajuste del margen del subtítulo */}
-    <Text style={[styles.headerTitle, { marginTop: 15 }]}>Options</Text> {/* Aumentar el margen superior */}
-
     <TouchableOpacity style={styles.consultButton} onPress={handleConsult}>
       <Text style={styles.buttonText}>Consult</Text>
     </TouchableOpacity>
