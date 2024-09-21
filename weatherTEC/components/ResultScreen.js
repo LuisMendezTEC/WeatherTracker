@@ -7,115 +7,117 @@ const screenWidth = Dimensions.get('window').width;
 const API_KEY = '7ZYLMSL4D3RHYX7C';  // Clave API de ThingSpeak
 const BASE_URL = 'https://api.thingspeak.com/channels/2663975/feeds.json';
 
-export default function ResultsScreen({ route }) {
-  const { startDate, endDate } = route.params;
+export default function ResultsScreen() {
+  // Fechas quemadas para pruebas
+  const startDate = '2024-09-20';
+  const endDate = '2024-09-21';
 
   const [temperatureData, setTemperatureData] = useState([]);
   const [humidityData, setHumidityData] = useState([]);
-  const [timeLabels, setTimeLabels] = useState([]);
+  const [dateLabels, setDateLabels] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [maxTemp, setMaxTemp] = useState(0);
   const [minTemp, setMinTemp] = useState(0);
   const [maxHum, setMaxHum] = useState(0);
   const [minHum, setMinHum] = useState(0);
 
   // Función para obtener datos de ThingSpeak y agruparlos por hora
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(BASE_URL, {
-        params: {
-          api_key: API_KEY,
-          start: `${startDate} 00:00:00`,
-          end: `${endDate} 23:59:59`,
-        },
-      });
+  // Función para obtener datos de ThingSpeak y agruparlos por hora
+const fetchData = async () => {
+  try {
+    const response = await axios.get(BASE_URL, {
+      params: {
+        api_key: API_KEY,
+        start: `${startDate} 00:00:00`,
+        end: `${endDate} 23:59:59`,
+      },
+    });
 
-      const feeds = response.data.feeds || [];
-      console.log('Feeds:', feeds);
+    const feeds = response.data.feeds || [];
+    console.log('Feeds:', feeds);
 
-      if (feeds.length > 0) {
-        // Agrupar los datos por la hora
-        const groupedData = feeds.reduce((acc, feed) => {
-          const date = new Date(feed.created_at);
-          const hour = date.getHours();  // Extraer la hora
+    if (feeds.length > 0) {
+      // Variables para almacenar los máximos y mínimos reales
+      let tempMax = -Infinity;
+      let tempMin = Infinity;
+      let humMax = -Infinity;
+      let humMin = Infinity;
 
-          if (!acc[hour]) {
-            acc[hour] = { tempSum: 0, humSum: 0, count: 0 };
-          }
+      // Agrupar los datos por hora
+      const groupedData = feeds.reduce((acc, feed) => {
+        const createdAt = new Date(feed.created_at);
+        const hour = `${createdAt.getFullYear()}-${String(
+          createdAt.getMonth() + 1
+        ).padStart(2, '0')}-${String(createdAt.getDate()).padStart(2, '0')} ${String(
+          createdAt.getHours()
+        ).padStart(2, '0')}:00`;
 
-          acc[hour].tempSum += feed.field1 ? parseFloat(feed.field1) : 0;
-          acc[hour].humSum += feed.field2 ? parseFloat(feed.field2) : 0;
-          acc[hour].count += 1;
+        const temp = feed.field1 ? parseFloat(feed.field1) : 0;
+        const hum = feed.field2 ? parseFloat(feed.field2) : 0;
 
-          return acc;
-        }, {});
+        // Actualizar máximos y mínimos globales antes de agrupar
+        tempMax = Math.max(tempMax, temp);
+        tempMin = Math.min(tempMin, temp);
+        humMax = Math.max(humMax, hum);
+        humMin = Math.min(humMin, hum);
 
-        // Calcular el promedio por cada hora y generar etiquetas de tiempo
-        const tempData = [];
-        const humData = [];
-        const labels = [];
-
-        for (let hour = 0; hour < 24; hour++) {
-          if (groupedData[hour]) {
-            const { tempSum, humSum, count } = groupedData[hour];
-            tempData.push(tempSum / count);  // Promedio de temperatura
-            humData.push(humSum / count);    // Promedio de humedad
-            labels.push(`${hour}:00`);       // Etiqueta de tiempo
-          } else {
-            tempData.push(0);                // Si no hay datos, 0 por defecto
-            humData.push(0);
-            labels.push(`${hour}:00`);
-          }
+        if (!acc[hour]) {
+          acc[hour] = { tempSum: 0, humSum: 0, count: 0 };
         }
 
-        setTemperatureData(tempData);
-        setHumidityData(humData);
-        setTimeLabels(labels);
-// Después de calcular los datos de temperatura
-setTemperatureData(tempData);
-setHumidityData(humData);
-setTimeLabels(labels);
+        acc[hour].tempSum += temp;
+        acc[hour].humSum += hum;
+        acc[hour].count += 1;
 
-  // Calcular el máximo y mínimo de temperatura y humedad
-  const filteredTempData = tempData.filter(temp => temp > 0); // Filtrar temperaturas mayores a 0
-  setMaxTemp(Math.max(...tempData));
+        return acc;
+      }, {});
 
-  // Verificar si hay más de un valor en las temperaturas filtradas
-  if (filteredTempData.length > 1) {
-    setMinTemp(filteredTempData.sort((a, b) => a - b)[1]); // Obtener el segundo más bajo
-  } else {
-    setMinTemp(0); // Si solo hay un valor o ninguno, asignar 0
-  }
+      // Calcular el promedio por cada hora y generar etiquetas de hora
+      const tempData = [];
+      const humData = [];
+      const labels = [];
 
-  const fileteredHumData = humData.filter(hum => hum > 0); // Filtrar humedades mayores a 0
-  setMaxHum(Math.max(...humData));
-  if (fileteredHumData.length > 1) {
-    setMinHum(fileteredHumData.sort((a, b) => a - b)[1]); // Obtener el segundo más bajo
-  } else {
-    setMinHum(0); // Si solo hay un valor o ninguno, asignar 0
-  }
+      Object.keys(groupedData).forEach((hour) => {
+        const { tempSum, humSum, count } = groupedData[hour];
+        const avgTemp = tempSum / count;
+        const avgHum = humSum / count;
+        tempData.push(avgTemp);  // Promedio de temperatura por hora
+        humData.push(avgHum);    // Promedio de humedad por hora
+      });
 
-      } else {
-        setTemperatureData([]);
-        setHumidityData([]);
-        setTimeLabels([]);
-        setMaxTemp(0);
-        setMinTemp(0);
-        setMaxHum(0);
-        setMinHum(0);
-      }
+      // Actualizar los estados con los datos agrupados por hora
+      setTemperatureData(tempData);
+      setHumidityData(humData);
+      setDateLabels(labels);
 
-      setLoading(false); // Deshabilitamos el indicador de carga
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
+      // Establecer máximos y mínimos globales calculados
+      setMaxTemp(tempMax);
+      setMinTemp(tempMin);
+      setMaxHum(humMax);
+      setMinHum(humMin);
+
+    } else {
+      setTemperatureData([]);
+      setHumidityData([]);
+      setDateLabels([]);
+      setMaxTemp(0);
+      setMinTemp(0);
+      setMaxHum(0);
+      setMinHum(0);
     }
-  };
+
+    setLoading(false); // Deshabilitar el indicador de carga
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchData();
-  }, [startDate, endDate]); // Asegúrate de que los datos se actualicen si las fechas cambian
+  }, []); // Solo se ejecuta una vez ya que usamos fechas quemadas
 
   if (loading) {
     return (
@@ -127,7 +129,7 @@ setTimeLabels(labels);
 
   // Gráfico de Temperatura
   const temperatureChartData = {
-    labels: timeLabels, // Etiquetas de tiempo (hora)
+    labels: dateLabels, // Etiquetas de horas
     datasets: [
       {
         data: temperatureData,
@@ -139,7 +141,7 @@ setTimeLabels(labels);
 
   // Gráfico de Humedad
   const humidityChartData = {
-    labels: timeLabels, // Etiquetas de tiempo (hora)
+    labels: dateLabels, // Etiquetas de horas
     datasets: [
       {
         data: humidityData,
@@ -194,9 +196,9 @@ setTimeLabels(labels);
       {/* Mostrar la temperatura y humedad máxima y mínima */}
       <View>
         <Text>Temperatura Máxima Historica: {maxTemp}</Text>
-        <Text>Temperatura Mínima Historia: {minTemp}</Text>
-        <Text>Humedad Máxima Historia: {maxHum}</Text>
-        <Text>Humedad Mínima Historia: {minHum}</Text>
+        <Text>Temperatura Mínima Historica: {minTemp}</Text>
+        <Text>Humedad Máxima Historica: {maxHum}</Text>
+        <Text>Humedad Mínima Historica: {minHum}</Text>
       </View>
     </ScrollView>
   );

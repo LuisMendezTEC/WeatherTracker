@@ -34,6 +34,7 @@ const Header = () => {
         placeholder="Initial date"
         value={startDateInput}
         onChangeText={(text) => setStartDateInput(text)}
+        placeholderTextColor="#90A4AE"
       />
       <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
         <Text style={styles.dateText}>{startDate.toLocaleDateString()}</Text>
@@ -59,6 +60,7 @@ const Header = () => {
         placeholder="End date"
         value={endDateInput}
         onChangeText={(text) => setEndDateInput(text)}
+        placeholderTextColor="#90A4AE"
       />
       <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
         <Text style={styles.dateText}>{endDate.toLocaleDateString()}</Text>
@@ -85,8 +87,8 @@ const Header = () => {
           <Switch
             value={showTemperature}
             onValueChange={() => setShowTemperature((prev) => !prev)}
-            thumbColor={showTemperature ? '#4DB6AC' : '#B0BEC5'}
-            trackColor={{ false: '#B0BEC5', true: '#80CBC4' }}
+            thumbColor={showTemperature ? '#42A5F5' : '#CFD8DC'}
+            trackColor={{ false: '#CFD8DC', true: '#B3E5FC' }}
           />
         </View>
         <View style={styles.switchOption}>
@@ -94,8 +96,8 @@ const Header = () => {
           <Switch
             value={showHumidity}
             onValueChange={() => setShowHumidity((prev) => !prev)}
-            thumbColor={showHumidity ? '#4DB6AC' : '#B0BEC5'}
-            trackColor={{ false: '#B0BEC5', true: '#80CBC4' }}
+            thumbColor={showHumidity ? '#42A5F5' : '#CFD8DC'}
+            trackColor={{ false: '#CFD8DC', true: '#B3E5FC' }}
           />
         </View>
       </View>
@@ -109,8 +111,8 @@ const Header = () => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    padding: 15,
-    backgroundColor: '#E0F7FA',
+    padding: 20,
+    backgroundColor: '#E0F7FA', // Fondo igual al de HomeScreen
     width: '100%',
     flex: 1,
     position: 'absolute',
@@ -118,36 +120,37 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   headerTitle: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: 20,
+    marginBottom: 15,
     fontWeight: 'bold',
-    color: '#01579B',
+    color: '#37474F', // Azul oscuro-grisáceo
     textAlign: 'left',
   },
   dateLabel: {
-    fontSize: 14,
-    color: '#01579B',
+    fontSize: 16,
+    color: '#37474F', 
     marginVertical: 5,
   },
   dateInput: {
     borderWidth: 1,
-    borderColor: '#B0BEC5',
+    borderColor: '#CFD8DC', // Gris claro
     borderRadius: 5,
     padding: 10,
     width: '30%',
     alignSelf: 'flex-start',
-    marginBottom: 5,
+    marginBottom: 10,
+    backgroundColor: '#FFFFFF', // Blanco
   },
   dateText: {
-    fontSize: 14,
-    color: '#0288D1',
+    fontSize: 16,
+    color: '#42A5F5', // Azul suave
     marginVertical: 5,
     textAlign: 'left',
   },
   switchContainer: {
     alignItems: 'flex-start',
     width: '100%',
-    marginVertical: 10,
+    marginVertical: 15,
   },
   switchOption: {
     flexDirection: 'row',
@@ -155,22 +158,22 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   switchText: {
-    fontSize: 14,
-    color: '#01579B',
+    fontSize: 16,
+    color: '#37474F',
     marginRight: 10,
   },
   consultButton: {
-    backgroundColor: '#0288D1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
+    backgroundColor: '#42A5F5', // Azul suave
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 25,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 15,
     alignSelf: 'flex-start',
   },
   buttonText: {
-    color: '#FFF',
-    fontSize: 16,
+    color: '#FFF', 
+    fontSize: 18,
   },
 });
 
