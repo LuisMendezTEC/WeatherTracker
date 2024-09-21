@@ -194,12 +194,27 @@ const fetchData = async () => {
       </View>
 
       {/* Mostrar la temperatura y humedad máxima y mínima */}
-      <View>
-        <Text>Temperatura Máxima Historica: {maxTemp}</Text>
-        <Text>Temperatura Mínima Historica: {minTemp}</Text>
-        <Text>Humedad Máxima Historica: {maxHum}</Text>
-        <Text>Humedad Mínima Historica: {minHum}</Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoText}>Temperatura Máxima Histórica: {maxTemp+'°C'}</Text>
+        <Text style={styles.infoText}>Temperatura Mínima Histórica: {minTemp+'°C'}</Text>
+        <Text style={styles.infoText}>Humedad Máxima Histórica: {maxHum+'%'}</Text>
+        <Text style={styles.infoText}>Humedad Mínima Histórica: {minHum+'%'}</Text>
       </View>
     </ScrollView>
   );
 }
+
+const styles = {
+  infoContainer: {
+    backgroundColor: '#E0F7FA', // Fondo igual al de HomeScreen
+    padding: 20, // Relleno interno para separar el texto de los bordes
+    borderRadius: 10, // Borde redondeado
+    marginVertical: 10, // Margen vertical entre otros elementos
+    alignItems: 'center', // Centra los textos horizontalmente
+  },
+  infoText: {
+    color: '#000', // Texto en color negro
+    fontSize: 16, // Tamaño de la fuente
+    marginBottom: 5, // Espacio entre los textos
+  },
+};
