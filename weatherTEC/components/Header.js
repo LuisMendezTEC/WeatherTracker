@@ -1,8 +1,10 @@
 import { DateTimePicker } from '@react-native-community/datetimepicker';
+import { useNavigation } from '@react-navigation/native'; // Importar useNavigation
 import React, { useState } from 'react';
 import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-const Header = ({ onConsult }) => {
+const Header = () => {
+  const navigation = useNavigation(); // Obtener el objeto de navegación
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
@@ -13,7 +15,13 @@ const Header = ({ onConsult }) => {
   const [endDateInput, setEndDateInput] = useState('');
 
   const handleConsult = () => {
-    onConsult({ startDate, endDate, showTemperature, showHumidity });
+    // Navegar a ResultsScreen con los datos ingresados
+    navigation.navigate('Results', {
+      startDate: startDateInput,
+      endDate: endDateInput,
+      showTemperature,
+      showHumidity,
+    });
   };
 
   return (
@@ -102,9 +110,9 @@ const Header = ({ onConsult }) => {
 const styles = StyleSheet.create({
   headerContainer: {
     padding: 15,
-    backgroundColor: '#E0F7FA', // Fondo azul claro
+    backgroundColor: '#E0F7FA',
     width: '100%',
-    flex: 1, // Para ocupar todo el espacio disponible
+    flex: 1,
     position: 'absolute',
     top: 0,
     zIndex: 1000,

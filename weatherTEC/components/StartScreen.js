@@ -1,12 +1,16 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Header from './Header'; // Importamos el Header
+import Header from './Header';
 
 export default function StartScreen({ navigation }) {
+  const handleConsult = (params) => {
+    // Navegar a la pantalla de resultados pasando los parámetros seleccionados por el usuario
+    navigation.navigate('Results', { ...params });
+  };
+
   return (
     <View style={styles.container}>
-      {/* Aquí se renderiza directamente el Header */}
-      <Header />
+      <Header onConsult={handleConsult} />
     </View>
   );
 }
